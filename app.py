@@ -1,31 +1,19 @@
-import streamlit as st
-import numpy as np
 import torch
-import plotly.graph_objects as go
-import ollama
+import torch.nn as nn
 
-# UI Setup
-st.title("🛡️ TS2Text: AI Anomaly Explainer")
-st.write("Detecting anomalies in time-series data and explaining them with Llama 3.")
+class AdvancedLSTMAutoencoder(nn.Module):
+    def __init__(self, input_dim=3, hidden_dim=32):
+        super().__init__()
+        # input_dim=3 (Temperature, Pressure, Vibration)
+        self.encoder = nn.LSTM(input_dim, hidden_dim, batch_first=True)
+        self.decoder = nn.LSTM(hidden_dim, hidden_dim, batch_first=True)
+        self.output_layer = nn.Linear(hidden_dim, input_dim)
 
-# Simulated Data with Anomaly at index 350
-if 'data' not in st.session_state:
-    time_steps = np.linspace(0, 50, 500)
-    st.session_state.data = np.sin(time_steps) + np.random.normal(0, 0.1, 500)
-    st.session_state.data[350:360] += 4.5 
-
-# Display Graph
-fig = go.Figure(go.Scatter(y=st.session_state.data, mode='lines', name='Sensor Feed'))
-fig.add_hline(y=2.5, line_dash="dot", line_color="red", annotation_text="Anomaly Threshold")
-st.plotly_chart(fig)
-
-# AI Diagnostic Button
-if st.button("Generate AI Diagnostic"):
-    with st.spinner("Llama 3 is analyzing..."):
-        prompt = "A sensor baseline is 0.5. At index 350, it hit 4.5. Explain this as a technical spike."
-        try:
-            response = ollama.chat(model='llama3', messages=[{'role': 'user', 'content': prompt}])
-            st.error("Anomaly Detected!")
-            st.info(response['message']['content'])
-        except Exception:
-            st.warning("Ollama not found. Run this locally to see AI reports.")
+    def forward(self, x):
+        batch_size, seq_len, _ = x.size()
+        # Encode
+        _, (hidden, _) = self.encoder(x)
+        # Decode - Repeat hidden state
+        x_decoded = hidden.permute(1, 0, 2).repeat(1, seq_len, 1)
+        x_decoded, _ = self.decoder(x_decoded)
+        return self.output_layer(x_decoded)
