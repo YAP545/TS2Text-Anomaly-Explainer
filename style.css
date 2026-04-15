@@ -1,0 +1,40 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+    text-align: center;
+}
+
+header {
+    background: linear-gradient(135deg, #00d4ff 0%, #090979 100%);
+    color: white;
+    padding: 60px 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.tech-stack span {
+    display: inline-block;
+    background: #e1e8f0;
+    padding: 8px 15px;
+    margin: 5px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.btn {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 12px 30px;
+    background: #090979;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
