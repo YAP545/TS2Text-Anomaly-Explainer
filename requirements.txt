@@ -2,6 +2,6 @@ streamlit
 torch
 numpy
 plotly
-ollama
 pandas
 scikit-learn
+ollama
