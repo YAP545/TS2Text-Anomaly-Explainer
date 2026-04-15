@@ -1,7 +1,7 @@
 streamlit
 torch
-pandas
 numpy
-scikit-learn
 plotly
 ollama
+pandas
+scikit-learn
